@@ -1,0 +1,362 @@
+1. Business Question: What is the total revenue generated from all taxi trips?
+ select sum(total_amount) as total_revenue from nyc_taxi;
++---------------+
+| total_revenue |
++---------------+
+|  442777809.31 |
++---------------+
+
+2. Business Question: Which month generated the highest revenue?
+ select monthname (tpep_pickup_datetime) as month,sum(total_amount) as revenue from nyc_taxi group by monthname (tpep_pickup_datetime),month(tpep_pickup_datetime) order by revenue desc limit 1;
++-------+--------------+
+| month | revenue      |
++-------+--------------+
+| March | 118179837.07 |
++-------+--------------+
+1 row in set (1 min 15.86 sec)
+
+3. Business Question: Which day of the week generates the most revenue?
+ select dayname (tpep_pickup_datetime) as day, sum(total_amount) as revenue from nyc_taxi group by  dayname (tpep_pickup_datetime), dayofweek(tpep_pickup_datetime) order by revenue desc limit 1;
++----------+-------------+
+| day      | revenue     |
++----------+-------------+
+| Thursday | 75249700.67 |
++----------+-------------+
+1 row in set (1 min 19.70 sec)
+
+4. Business Question: During which hour does the taxi business earn the most revenue?
+ select hour(tpep_pickup_datetime) as pickup_hour, sum(total_amount) as revenue from nyc_taxi group by pickup_hour order by revenue desc limit 1;
++-------------+-------------+
+| pickup_hour | revenue     |
++-------------+-------------+
+|          18 | 31430152.59 |
++-------------+-------------+
+1 row in set (57.77 sec)
+
+5. Business Question: What is the average fare charged per trip?
+select avg(fare_amount) as avg_fare_amt from nyc_taxi;
++--------------+
+| avg_fare_amt |
++--------------+
+|    21.560471 |
++--------------+
+1 row in set (35.99 sec)
+
+6. Business Question: Which payment method is preferred by customers?
+ select payment_type, count(*) as trip from nyc_taxi group by payment_type order by trip desc ;
++--------------+---------+
+| payment_type | trip    |
++--------------+---------+
+|            1 | 9380384 |
+|            0 | 3856149 |
+|            2 | 1256668 |
+|            4 |   82646 |
+|            3 |   40807 |
++--------------+---------+
+5 rows in set (43.38 sec)
+
+7. Business Question: Which payment method contributes the most revenue?
+select payment_type,sum(total_amount) as revenue from nyc_taxi group by payment_type order by revenue desc ;
++--------------+--------------+
+| payment_type | revenue      |
++--------------+--------------+
+|            1 | 280824014.99 |
+|            0 | 127130598.13 |
+|            2 |  31647405.62 |
+|            4 |   2296337.97 |
+|            3 |    879452.60 |
++--------------+--------------+
+5 rows in set (48.12 sec)
+
+8. Business Question: Which payment method results in the highest average tips?
+ select payment_type,avg(tip_amount) as avg_tip from nyc_taxi group by payment_type order by avg_tip desc;
++--------------+----------+
+| payment_type | avg_tip  |
++--------------+----------+
+|            1 | 4.174177 |
+|            0 | 0.419622 |
+|            4 | 0.004269 |
+|            3 | 0.001095 |
+|            2 | 0.000370 |
++--------------+----------+
+5 rows in set (53.00 sec)
+
+9. Business Question: How many passengers travel per trip on average?
+select avg(passenger_count) as avg_passenger from nyc_taxi;
++---------------+
+| avg_passenger |
++---------------+
+|        0.9133 |
++---------------+
+1 row in set (32.99 sec)
+
+10. Business Question: What is the most common number of passengers per trip?
+ select passenger_count,count(*) as trip from nyc_taxi group by passenger_count order by trip desc;
++-----------------+---------+
+| passenger_count | trip    |
++-----------------+---------+
+|               1 | 8893568 |
+|               0 | 3908100 |
+|               2 | 1296735 |
+|               3 |  281091 |
+|               4 |  185551 |
+|               5 |   33035 |
+|               6 |   18556 |
+|               8 |      11 |
+|               9 |       4 |
+|               7 |       3 |
++-----------------+---------+
+10 rows in set (38.62 sec)
+
+11. Business Question: How long does an average taxi trip last?
+ select avg(trip_duration_minutes) avg_trip_duration from nyc_taxi;
++-------------------+
+| avg_trip_duration |
++-------------------+
+|         17.484274 |
++-------------------+
+1 row in set (34.19 sec)
+
+12. Business Question: What is the average distance traveled per trip?
+select avg(trip_distance) avg_trip_distance from nyc_taxi ;
++-------------------+
+| avg_trip_distance |
++-------------------+
+|          3.382952 |
++-------------------+
+1 row in set (37.15 sec)
+
+13. Business Question: Which trips took unusually long and may indicate traffic or delays?
+select *from nyc_taxi where trip_duration_minutes > 60;
+
+14. Business Question: Which trips were long-distance journeys?
+select *from nyc_taxi where trip_distance > 20;
+
+15. Business Question: How does the average taxi speed change across different months?
+ select monthname(tpep_pickup_datetime) as month, avg(trip_distance/(trip_duration_minutes/60)) as avg_speed from nyc_taxi where trip_duration_minutes>0 group by monthname(tpep_pickup_datetime), month(tpep_pickup_datetime);
++----------+---------------+
+| month    | avg_speed     |
++----------+---------------+
+| April    | 10.6496119961 |
+| December | 14.4636702000 |
+| February | 10.3066733056 |
+| January  | 10.9727889331 |
+| March    | 10.9508924638 |
+| May      |  7.9160420000 |
++----------+---------------+
+6 rows in set (1 min 22.88 sec)
+
+16. Business Question: Which pickup hours have the highest demand?
+ select hour(tpep_pickup_datetime) as pickup_hour,count(*) as total_trip from nyc_taxi group by hour(tpep_pickup_datetime) order by total_trip desc limit 5;
++-------------+------------+
+| pickup_hour | total_trip |
++-------------+------------+
+|          18 |    1042512 |
+|          17 |     986652 |
+|          19 |     925257 |
+|          21 |     880471 |
+|          16 |     869706 |
++-------------+------------+
+5 rows in set (44.63 sec)
+
+17. Business Question: Which weekday earns the most revenue?
+ select dayname(tpep_pickup_datetime) as weekday, sum(total_amount) as revenue from nyc_taxi group by dayname(tpep_pickup_datetime), dayofweek(tpep_pickup_datetime) order by revenue desc;
++-----------+-------------+
+| weekday   | revenue     |
++-----------+-------------+
+| Thursday  | 75249700.67 |
+| Friday    | 67302918.87 |
+| Saturday  | 66167509.15 |
+| Wednesday | 65684466.90 |
+| Tuesday   | 61953275.07 |
+| Sunday    | 54965337.57 |
+| Monday    | 51454601.08 |
++-----------+-------------+
+7 rows in set (53.53 sec)
+
+18. Business Question: Which pickup locations generate the highest revenue?
+ select PULocationID,sum(total_amount) as revenue from nyc_taxi group by PULocationID order by revenue desc limit 10;
++--------------+-------------+
+| PULocationID | revenue     |
++--------------+-------------+
+|          132 | 44436477.29 |
+|          138 | 24340822.90 |
+|          161 | 16438638.73 |
+|          237 | 14218596.14 |
+|          236 | 13527532.57 |
+|          230 | 12595524.39 |
+|          186 | 11607238.04 |
+|          162 | 11492101.16 |
+|           79 | 10184613.45 |
+|           68 | 10117886.90 |
++--------------+-------------+
+10 rows in set (51.88 sec)
+
+19. Business Question: Which drop-off locations receive the most trips?
+ select DOLocationID,count(*) total_trip from nyc_taxi group by DOLocationID order by total_trip desc limit 10;
++--------------+------------+
+| DOLocationID | total_trip |
++--------------+------------+
+|          236 |     614252 |
+|          237 |     587315 |
+|          161 |     481446 |
+|          170 |     397897 |
+|          230 |     382520 |
+|          239 |     379418 |
+|          142 |     373923 |
+|          141 |     369113 |
+|          162 |     360070 |
+|           68 |     358608 |
++--------------+------------+
+10 rows in set (47.04 sec)
+
+20. Business Question: Which vendor completed the most trips?
+ select VendorID,count(*) as total_trip from nyc_taxi group by VendorID order by total_trip desc ;
++----------+------------+
+| VendorID | total_trip |
++----------+------------+
+|        2 |   11717331 |
+|        1 |    2870413 |
+|        6 |      28910 |
++----------+------------+
+3 rows in set (45.61 sec)
+
+21. Business Question: Which payment method generates the most revenue?
+ select payment_type, sum(total_amount) as revenue from nyc_taxi group by payment_type order by revenue desc;
++--------------+--------------+
+| payment_type | revenue      |
++--------------+--------------+
+|            1 | 280824014.99 |
+|            0 | 127130598.13 |
+|            2 |  31647405.62 |
+|            4 |   2296337.97 |
+|            3 |    879452.60 |
++--------------+--------------+
+5 rows in set (48.05 sec)
+
+22. Business Question: Which customers (by payment type) tip the most?
+ select payment_type,avg(tip_amount) as avg_tip from nyc_taxi group by payment_type order by avg_tip desc ;
++--------------+----------+
+| payment_type | avg_tip  |
++--------------+----------+
+|            1 | 4.174177 |
+|            0 | 0.419622 |
+|            4 | 0.004269 |
+|            3 | 0.001095 |
+|            2 | 0.000370 |
++--------------+----------+
+5 rows in set (52.30 sec)
+
+23. Business Question: Which trips had the longest duration?
+ with trip_rank as(select  *, rank() over(order by trip_duration_minutes desc) as rnk from nyc_taxi ) select * from trip_rank where rnk<=10;
++----------+----------------------+-----------------------+-----------------+---------------+------------+--------------------+--------------+--------------+--------------+-------------+-------+---------+------------+--------------+-----------------------+--------------+----------------------+-------------+--------------------+-----------------------+--------------+----------------+-------------+-----+
+| VendorID | tpep_pickup_datetime | tpep_dropoff_datetime | passenger_count | trip_distance | RatecodeID | store_and_fwd_flag | PULocationID | DOLocationID | payment_type | fare_amount | extra | mta_tax | tip_amount | tolls_amount | improvement_surcharge | total_amount | congestion_surcharge | Airport_fee | cbd_congestion_fee | trip_duration_minutes | pickup_month | pickup_weekday | pickup_hour | rnk |
++----------+----------------------+-----------------------+-----------------+---------------+------------+--------------------+--------------+--------------+--------------+-------------+-------+---------+------------+--------------+-----------------------+--------------+----------------------+-------------+--------------------+-----------------------+--------------+----------------+-------------+-----+
+|        1 | 2026-01-15 11:49:58  | 2026-01-15 14:49:56   |               1 |         17.90 | 99.0       | N                  |           47 |           76 |            1 |       53.50 |  0.00 |    0.50 |       0.00 |         0.00 |                  0.00 |        54.00 |                 0.00 |        0.00 |               0.00 |                179.97 | NULL         | NULL           |        NULL |   1 |
+|        2 | 2026-04-10 20:29:00  | 2026-04-10 23:28:57   |               1 |         15.02 | 1.0        | N                  |          132 |          132 |            2 |       55.50 |  1.00 |    0.50 |       0.00 |         7.46 |                  1.00 |        67.46 |                 0.00 |        2.00 |               0.00 |                179.95 | NULL         | NULL           |        NULL |   2 |
+|        1 | 2026-02-10 13:56:46  | 2026-02-10 16:56:40   |               1 |         21.90 | 99.0       | N                  |           43 |           86 |            1 |       63.50 |  0.00 |    0.50 |       0.00 |         5.60 |                  0.00 |        69.60 |                 0.00 |        0.00 |               0.00 |                179.90 | NULL         | NULL           |        NULL |   3 |
+|        6 | 2026-04-01 18:28:56  | 2026-04-01 21:28:47   |               0 |         13.54 | 0.0        |                    |          137 |           10 |            0 |        3.00 |  0.00 |    0.50 |       0.00 |         7.46 |                  0.30 |        36.60 |                 0.00 |        0.00 |               0.00 |                179.85 | NULL         | NULL           |        NULL |   4 |
+|        1 | 2026-04-30 16:30:00  | 2026-04-30 19:29:51   |               1 |          4.00 | 99.0       | N                  |          191 |          203 |            1 |       45.50 |  0.00 |    0.50 |       0.00 |         0.00 |                  0.00 |        46.00 |                 0.00 |        0.00 |               0.00 |                179.85 | NULL         | NULL           |        NULL |   4 |
+|        2 | 2026-02-26 09:09:35  | 2026-02-26 12:09:24   |               2 |          1.05 | 1.0        | N                  |          230 |           68 |            2 |       10.00 |  0.00 |    0.50 |       0.00 |         0.00 |                  1.00 |        14.75 |                 2.50 |        0.00 |               0.75 |                179.82 | NULL         | NULL           |        NULL |   6 |
+|        2 | 2026-04-14 14:33:28  | 2026-04-14 17:33:16   |               1 |          7.38 | 1.0        | N                  |          239 |          145 |            2 |       60.40 |  0.00 |    0.50 |       0.00 |         0.00 |                  1.00 |        65.15 |                 2.50 |        0.00 |               0.75 |                179.80 | NULL         | NULL           |        NULL |   7 |
+|        1 | 2026-02-02 15:10:41  | 2026-02-02 18:10:28   |               1 |         17.60 | 99.0       | N                  |           42 |           76 |            1 |       53.50 |  0.00 |    0.50 |       0.00 |         0.00 |                  0.00 |        54.00 |                 0.00 |        0.00 |               0.00 |                179.78 | NULL         | NULL           |        NULL |   8 |
+|        1 | 2026-02-13 14:01:24  | 2026-02-13 17:01:11   |               1 |         17.50 | 99.0       | N                  |           89 |          243 |            1 |       58.50 |  0.00 |    0.50 |       0.00 |         0.00 |                  0.00 |        59.00 |                 0.00 |        0.00 |               0.00 |                179.78 | NULL         | NULL           |        NULL |   8 |
+|        1 | 2026-04-16 15:18:16  | 2026-04-16 18:18:02   |               1 |         25.40 | 99.0       | N                  |          166 |           85 |            1 |       46.50 |  0.00 |    0.50 |       0.00 |         7.46 |                  0.00 |        54.46 |                 0.00 |        0.00 |               0.00 |                179.77 | NULL         | NULL           |        NULL |  10 |
++----------+----------------------+-----------------------+-----------------+---------------+------------+--------------------+--------------+--------------+--------------+-------------+-------+---------+------------+--------------+-----------------------+--------------+----------------------+-------------+--------------------+-----------------------+--------------+----------------+-------------+-----+
+10 rows in set (4 min 26.82 sec)
+
+24. Business Question: Which dates generated the highest revenue?
+ with daily_revenue as (select date(tpep_pickup_datetime) as trip_date, sum(total_amount) as revenue from nyc_taxi  group by date(tpep_pickup_datetime) ) select *, dense_rank() over(order by revenue desc) rnk from daily_revenue  limit 5;
++------------+------------+-----+
+| trip_date  | revenue    | rnk |
++------------+------------+-----+
+| 2026-03-12 | 4966126.10 |   1 |
+| 2026-01-30 | 4895096.10 |   2 |
+| 2026-01-29 | 4827866.26 |   3 |
+| 2026-03-05 | 4769799.47 |   4 |
+| 2026-04-25 | 4622380.93 |   5 |
++------------+------------+-----+
+5 rows in set (52.29 sec)
+
+25. Business Question: How is revenue growing month by month over time?
+ with monthly_revenue as( select month(tpep_pickup_datetime) month_no, monthname(tpep_pickup_datetime) month_name, sum(total_amount) as revenue from nyc_taxi group by month(tpep_pickup_datetime),monthname(tpep_pickup_datetime)) select month_name,revenue, sum(revenue) over(order by month_no) running_revenue from monthly_revenue;
++------------+--------------+-----------------+
+| month_name | revenue      | running_revenue |
++------------+--------------+-----------------+
+| January    | 108647887.56 |    108647887.56 |
+| February   | 102010953.16 |    210658840.72 |
+| March      | 118179837.07 |    328838677.79 |
+| April      | 113938783.73 |    442777461.52 |
+| May        |        17.94 |    442777479.46 |
+| December   |       329.85 |    442777809.31 |
++------------+--------------+-----------------+
+6 rows in set (1 min 19.67 sec)
+
+26. Business Question: What percentage of total revenue comes from each payment method?
+ select payment_type,sum(total_amount) revenue, sum(total_amount)*100/sum(sum(total_amount)) over() contribution_percent from nyc_taxi group by payment_type;
++--------------+--------------+----------------------+
+| payment_type | revenue      | contribution_percent |
++--------------+--------------+----------------------+
+|            1 | 280824014.99 |            63.423236 |
+|            2 |  31647405.62 |             7.147469 |
+|            4 |   2296337.97 |             0.518621 |
+|            3 |    879452.60 |             0.198622 |
+|            0 | 127130598.13 |            28.712053 |
++--------------+--------------+----------------------+
+5 rows in set (53.28 sec)
+
+27. Business Question: Which 10 individual taxi trips generated the highest revenue?
+ select *from  nyc_taxi order by total_amount desc limit 10;
++----------+----------------------+-----------------------+-----------------+---------------+------------+--------------------+--------------+--------------+--------------+-------------+-------+---------+------------+--------------+-----------------------+--------------+----------------------+-------------+--------------------+-----------------------+--------------+----------------+-------------+
+| VendorID | tpep_pickup_datetime | tpep_dropoff_datetime | passenger_count | trip_distance | RatecodeID | store_and_fwd_flag | PULocationID | DOLocationID | payment_type | fare_amount | extra | mta_tax | tip_amount | tolls_amount | improvement_surcharge | total_amount | congestion_surcharge | Airport_fee | cbd_congestion_fee | trip_duration_minutes | pickup_month | pickup_weekday | pickup_hour |
++----------+----------------------+-----------------------+-----------------+---------------+------------+--------------------+--------------+--------------+--------------+-------------+-------+---------+------------+--------------+-----------------------+--------------+----------------------+-------------+--------------------+-----------------------+--------------+----------------+-------------+
+|        2 | 2026-02-05 17:01:04  | 2026-02-05 17:11:41   |               3 |          0.00 | 5.0        | N                  |          108 |          108 |            2 |      999.00 |  0.00 |    0.00 |       0.00 |         0.00 |                  1.00 |      1000.00 |                 0.00 |        0.00 |               0.00 |                 10.62 | NULL         | NULL           |        NULL |
+|        2 | 2026-04-16 16:14:48  | 2026-04-16 16:14:54   |               1 |          0.00 | 5.0        | N                  |          216 |          216 |            2 |      999.00 |  0.00 |    0.00 |       0.00 |         0.00 |                  1.00 |      1000.00 |                 0.00 |        0.00 |               0.00 |                  0.10 | NULL         | NULL           |        NULL |
+|        2 | 2026-04-26 01:48:33  | 2026-04-26 01:48:39   |               1 |          0.00 | 5.0        | N                  |          219 |          219 |            2 |      999.00 |  0.00 |    0.00 |       0.00 |         0.00 |                  1.00 |      1000.00 |                 0.00 |        0.00 |               0.00 |                  0.10 | NULL         | NULL           |        NULL |
+|        2 | 2026-04-26 15:58:38  | 2026-04-26 15:58:47   |               1 |          0.00 | 5.0        | N                  |          261 |          261 |            2 |      995.00 |  0.00 |    0.00 |       0.00 |         0.00 |                  1.00 |       998.50 |                 2.50 |        0.00 |               0.00 |                  0.15 | NULL         | NULL           |        NULL |
+|        2 | 2026-01-19 17:09:00  | 2026-01-19 17:09:05   |               4 |          0.00 | 5.0        | N                  |           24 |           24 |            3 |      990.00 |  0.00 |    0.00 |       0.00 |         0.00 |                  1.00 |       991.00 |                 0.00 |        0.00 |               0.00 |                  0.08 | NULL         | NULL           |        NULL |
+|        2 | 2026-04-19 23:20:26  | 2026-04-19 23:20:33   |               1 |          0.00 | 5.0        | N                  |          132 |          132 |            2 |      980.00 |  0.00 |    0.00 |       0.00 |         0.00 |                  1.00 |       981.00 |                 0.00 |        0.00 |               0.00 |                  0.12 | NULL         | NULL           |        NULL |
+|        2 | 2026-04-04 03:49:35  | 2026-04-04 03:49:46   |               4 |          0.00 | 5.0        | N                  |           21 |           21 |            2 |      980.00 |  0.00 |    0.00 |       0.00 |         0.00 |                  1.00 |       981.00 |                 0.00 |        0.00 |               0.00 |                  0.18 | NULL         | NULL           |        NULL |
+|        2 | 2026-04-11 03:28:15  | 2026-04-11 03:30:25   |               4 |          0.42 | 5.0        | N                  |          178 |           21 |            2 |      980.00 |  0.00 |    0.00 |       0.00 |         0.00 |                  1.00 |       981.00 |                 0.00 |        0.00 |               0.00 |                  2.17 | NULL         | NULL           |        NULL |
+|        2 | 2026-04-28 11:01:32  | 2026-04-28 11:09:17   |               1 |          1.19 | 5.0        | N                  |          216 |          216 |            2 |      950.00 |  0.00 |    0.00 |       0.00 |         0.00 |                  1.00 |       951.00 |                 0.00 |        0.00 |               0.00 |                  7.75 | NULL         | NULL           |        NULL |
+|        2 | 2026-03-29 04:17:38  | 2026-03-29 04:18:48   |               4 |          0.40 | 5.0        | N                  |          178 |           22 |            2 |      950.00 |  0.00 |    0.00 |       0.00 |         0.00 |                  1.00 |       951.00 |                 0.00 |        0.00 |               0.00 |                  1.17 | NULL         | NULL           |        NULL |
++----------+----------------------+-----------------------+-----------------+---------------+------------+--------------------+--------------+--------------+--------------+-------------+-------+---------+------------+--------------+-----------------------+--------------+----------------------+-------------+--------------------+-----------------------+--------------+----------------+-------------+
+10 rows in set (1 min 7.89 sec)
+
+28. Business Question: Which taxi vendor has the longest average trip duration?
+ select VendorID,avg(trip_duration_minutes) avg_duration from nyc_taxi group by VendorID;
++----------+--------------+
+| VendorID | avg_duration |
++----------+--------------+
+|        2 |    16.437236 |
+|        1 |    21.550077 |
+|        6 |    38.167624 |
++----------+--------------+
+3 rows in set (47.26 sec)
+
+29. Business Question: Compare each month's revenue with the previous month's revenue.
+  select monthname(tpep_pickup_datetime) as month,sum(total_amount) as revenue, LAG(sum(total_amount)) over(order by month(tpep_pickup_datetime)) as previous_month_revenue from nyc_taxi group by month(tpep_pickup_datetime),monthname(tpep_pickup_datetime);
++----------+--------------+------------------------+
+| month    | revenue      | previous_month_revenue |
++----------+--------------+------------------------+
+| January  | 108647887.56 |                   NULL |
+| February | 102010953.16 |           108647887.56 |
+| March    | 118179837.07 |           102010953.16 |
+| April    | 113938783.73 |           118179837.07 |
+| May      |        17.94 |           113938783.73 |
+| December |       329.85 |                  17.94 |
++----------+--------------+------------------------+
+6 rows in set (1 min 31.99 sec)
+
+30. Business Question: What is the average tip percentage paid by customers for each payment method?
+ select payment_type, avg((tip_amount/fare_amount)*100) as avg_tip_percentage from nyc_taxi where fare_amount>0 group by payment_type;
++--------------+--------------------+
+| payment_type | avg_tip_percentage |
++--------------+--------------------+
+|            1 |      25.2867916637 |
+|            2 |       0.0020303286 |
+|            4 |       0.0065189455 |
+|            3 |       0.0161660963 |
+|            0 |       1.8640621873 |
++--------------+--------------------+
+5 rows in set (1 min 12.68 sec)
