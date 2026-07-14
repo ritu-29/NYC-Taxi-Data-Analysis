@@ -201,5 +201,3 @@ Pricing is **distance-driven**
 * Pickup Hour
 
 ---
----
-A strong example of **end-to-end analytics project** suitable for portfolios and interviews.
