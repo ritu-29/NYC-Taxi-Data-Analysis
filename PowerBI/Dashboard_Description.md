@@ -106,7 +106,6 @@ The dashboard includes interactive filters for dynamic analysis:
 * **Payment Type** → Credit Card, Cash, Dispute, No Charge
 * **Passenger Count** → Individual vs group travel
 * **Pickup Hour** → Hourly demand analysis
-
 ---
 ## 👩‍💻 Author
 
