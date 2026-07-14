@@ -1,4 +1,10 @@
 # 🚖 NYC Taxi Power BI Dashboard (Q1 2026)
+## 📂 Power BI Dashboard File
+
+Due to file size limitations on GitHub, the `.pbix` file is hosted externally.
+
+[Download Dashboard (.pbix)]
+https://drive.google.com/file/d/1sywgiRqqJxdaFovUhjln6MfHg9lvY6TB/view?usp=sharing
 
 ## 📊 Project Overview
 
