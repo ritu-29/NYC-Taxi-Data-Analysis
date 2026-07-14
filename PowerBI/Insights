@@ -1,0 +1,22 @@
+## 💡 Key Insights
+
+* **Strong Revenue Performance:**
+  The dataset generated **$222.77M** in total revenue during Q1 2026, indicating high demand and consistent taxi usage across the quarter.
+
+* **Dominance of Digital Payments:**
+  Credit card transactions account for **87%+ of total trips**, highlighting a clear shift toward digital payment methods and reduced reliance on cash.
+
+* **Peak Demand During Evening Hours:**
+  Trip volume peaks between **3 PM and 7 PM**, with the highest activity around **7 PM**, suggesting commuter-driven demand patterns.
+
+* **Short-Distance Travel Behavior:**
+  The majority of trips fall within the **0–5 mile range**, indicating that taxis are primarily used for short urban commutes.
+
+* **Single Passenger Dominance:**
+  Most trips involve **one passenger**, showing that taxis are mainly used for individual travel rather than group transportation.
+
+* **Fare vs Distance Relationship:**
+  There is a **strong positive correlation** between trip distance and fare, while some outliers indicate additional charges such as tolls, congestion fees, or traffic-related surcharges.
+
+* **Operational Efficiency Insights:**
+  Metrics like **average speed, trip duration, and revenue per trip** help evaluate taxi performance and efficiency across different conditions.
