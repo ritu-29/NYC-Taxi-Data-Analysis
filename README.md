@@ -176,7 +176,6 @@ Possible **group travel or data irregularities**
 
 📌 *Insight:*
 Pricing is **distance-driven**
-
 ---
 
 ## 📊 Power BI Dashboard Features
